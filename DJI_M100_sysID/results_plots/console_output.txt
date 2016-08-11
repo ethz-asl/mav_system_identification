@@ -1,0 +1,25 @@
+The roll model is estimated using experiment 1 and validated on data from experiment 2
+The roll model fits the validation data with **92.9636** %
+The pitch model is estimated using experiment 1 and validated on data from experiment 2
+The pitch model fits the validation data with **90.7756** %
+Roll estimated transfer function is: 
+
+ans =
+ 
+  From input "roll_{cmd}" to output "roll":
+         11.61
+  --------------------
+  s^2 + 14.7 s + 86.69
+ 
+Continuous-time transfer function.
+
+Pitch estimated transfer function is: 
+
+ans =
+ 
+  From input "pitch_{cmd}" to output "pitch":
+          12.01
+  ---------------------
+  s^2 + 15.47 s + 92.71
+ 
+Continuous-time transfer function.

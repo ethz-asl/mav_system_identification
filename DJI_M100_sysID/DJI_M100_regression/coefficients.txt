@@ -1,0 +1,2 @@
+pitch_deg = (vc_pitch-1024)*0.047161
+roll_deg = (vc_roll-1024)*0.047845
