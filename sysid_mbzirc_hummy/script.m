@@ -400,13 +400,22 @@ bodemag(Full_estimated_tf);
 %%% Estimated Transfer Functions
 
 disp('Roll estimated transfer function is: ');
-tf(roll_estimated_tf)
+    tf(roll_estimated_tf)
+disp('Roll time constant is: ')
+    disp(1/abs(pole(roll_estimated_tf)));
+disp('Roll gain is: ');
+    disp(dcgain(roll_estimated_tf));
+
 figure;
 bode(roll_estimated_tf); grid;
 title('Roll bode plot');
 
 disp('Pitch estimated transfer function is: ');
-tf(pitch_estimated_tf)
+    tf(pitch_estimated_tf)
+disp('Pitch time constant is: ')
+    disp(1/abs(pole(pitch_estimated_tf)));
+disp('Pitch gain is: ');
+    disp(dcgain(pitch_estimated_tf));
 figure;
 bode(pitch_estimated_tf); grid;
 title('Pitch bode plot');
