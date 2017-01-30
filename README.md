@@ -1,7 +1,7 @@
 # mav_system_identification
 Matlab scripts to perform system identification for DJI 100
 
-In order to run this script you need matlab_rosbag package
+In order to run this script, m100_sysid.m, you need matlab_rosbag package
 https://github.com/bcharrow/matlab_rosbag (source)
 https://github.com/bcharrow/matlab_rosbag/releases (binary)
  
