@@ -3,15 +3,23 @@ clear all;
 close all
 clc;
 
-% bag_name =  '2017-04-10-10-09-32.bag';
-bag_name = '2017-04-10-10-12-44.bag';
+bag_name =  '2017-04-10-10-09-32.bag';
 
 bag = ros.Bag(bag_name);
 bag.info
 %% read topics
 imu_data = readImu(bag, '/jay/mavros/imu/data');
-attitude_cmd = readPoseStamped(bag, '/jay/mavros/setpoint_attitude/attitude');
+imu_raw = readImu(bag, '/jay/mavros/imu/data_raw');
+
+% For old bags
+% attitude_cmd = readPoseStamped(bag, '/jay/mavros/setpoint_attitude/attitude');
 % thrust_cmd_raw = bag.readAll('/jay/mavros/setpoint_attitude/att_throttle');
+
+% For new bags
+attitude_cmd = readAttitudeTarget(bag, '/jay/mavros/setpoint_raw/attitude');
+odometry = readOdometry(bag, '/jay/msf_core/odometry');
+
+current_reference = readCommandReference(bag, '/jay/command/current_reference');
 
 imu_data.rpy = quat2rpy([imu_data.q(4,:)', imu_data.q(1:3,:)']');
 attitude_cmd.rpy = quat2rpy([attitude_cmd.q(4,:)', attitude_cmd.q(1:3,:)']');
