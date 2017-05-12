@@ -3,7 +3,9 @@ clear all;
 close all
 clc;
 
-bag_name =  '2017-04-10-10-09-32.bag';
+%bag_name =  '2017-04-10-10-09-32.bag';
+%bag_name = '~/data/jay/sysid/2017-05-12-13-09-21.bag';
+bag_name = '~/data/jay/sysid/2017-05-12-13-11-21.bag';
 
 bag = ros.Bag(bag_name);
 bag.info
@@ -14,18 +16,23 @@ imu_raw = readImu(bag, '/jay/mavros/imu/data_raw');
 % For old bags
 % attitude_cmd = readPoseStamped(bag, '/jay/mavros/setpoint_attitude/attitude');
 % thrust_cmd_raw = bag.readAll('/jay/mavros/setpoint_attitude/att_throttle');
-
 % For new bags
-attitude_cmd = readAttitudeTarget(bag, '/jay/mavros/setpoint_raw/attitude');
+% attitude_cmd = readAttitudeTarget(bag, '/jay/mavros/setpoint_raw/attitude');
+% attitude_cmd.rpy = quat2rpy([attitude_cmd.q(4,:)', attitude_cmd.q(1:3,:)']');
+% For newest bags
+attitude_cmd = readCommandRollPitchYawRateThrust(bag, '/jay/mavros/setpoint_raw/roll_pitch_yawrate_thrust');
+%%
 odometry = readOdometry(bag, '/jay/msf_core/odometry');
 
 current_reference = readCommandReference(bag, '/jay/command/current_reference');
 
 imu_data.rpy = quat2rpy([imu_data.q(4,:)', imu_data.q(1:3,:)']');
-attitude_cmd.rpy = quat2rpy([attitude_cmd.q(4,:)', attitude_cmd.q(1:3,:)']');
+attitude_cmd.rpy = vertcat(attitude_cmd.roll, attitude_cmd.pitch, attitude_cmd.yaw_rate);
 
-imu_data.t = imu_data.t - imu_data.t(1);
+t_start = imu_data.t(1);
+imu_data.t = imu_data.t - t_start;
 attitude_cmd.t = attitude_cmd.t - attitude_cmd.t(1);
+imu_raw.t = imu_raw.t - t_start;
 %% plot
 figure(1);
 ax = axes;
@@ -48,6 +55,18 @@ xlabel('time');
 ylabel('\theta [rad]');
 title('pitch angle');
 legend('\theta imu', '\theta cmd');
+grid on;
+ax.FontSize = 16;
+
+figure(3);
+ax = axes;
+plot(imu_raw.t, imu_raw.a(3, :), 'linewidth', 2);
+hold on;
+plot(attitude_cmd.t, attitude_cmd.thrust, '--', 'linewidth', 2);
+xlabel('time');
+ylabel('???');
+title('Thrust');
+legend('Acceleration', 'Commanded thrust');
 grid on;
 ax.FontSize = 16;
 

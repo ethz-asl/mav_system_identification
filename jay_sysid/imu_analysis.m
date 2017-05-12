@@ -1,5 +1,5 @@
 %% Parameters
-bag_name = '~/data/jay/comparison/jay_blue/2017-05-03-13-24-26.bag';
+%bag_name = '~/data/jay/comparison/jay_blue/2017-05-03-13-24-26.bag';
 %bag_name = '~/data/jay/comparison/jay_foam/2017-05-03-14-40-48.bag';
 %bag_name = '~/data/jay/comparison/jay_gel/2017-05-03-18-50-36.bag';
 %bag_name = '~/data/jay/comparison/imu_double_damping/2017-05-04-15-54-08.bag';
@@ -7,16 +7,16 @@ bag_name = '~/data/jay/comparison/jay_blue/2017-05-03-13-24-26.bag';
 %bag_name = '~/data/jay/comparison/imu_double_damping_5hz/2017-05-04-16-05-34.bag';
 %bag_name = '~/data/jay/comparison/imu_blue_5hz/2017-05-04-18-00-37.bag';
 %bag_name = '~/data/jay/comparison/imu_butter_5hz/2017-05-05-14-11-25.bag';
-bag_name = '~/data/jay/comparison/imu_butter_real_5hz/2017-05-05-16-49-00.bag';
+%bag_name = '~/data/jay/comparison/imu_butter_real_5hz/2017-05-05-16-49-00.bag';
+%bag_name = '~/data/jay/comparison/imu_butter_10hz/2017-05-05-17-07-01.bag';
 
-mav_name = 'jay';
+%mav_name = 'jay';
 
 %bag_name = '~/data/jay/comparison/ibis/2017-05-03-13-50-27.bag';
 %mav_name = 'ibis';
 
-%bag_name = '~/data/euroc_datasets/V1_01_easy.bag';
-%mav_name = 'euroc';
-
+bag_name = '~/data/euroc_datasets/V1_01_easy.bag';
+mav_name = 'euroc';
 
 %% Loading
 bag = ros.Bag(bag_name);
@@ -24,14 +24,17 @@ bag.info
 
 if (strcmp(mav_name, 'jay') == 1)
   imu_topic =  '/jay/mavros/imu/data_raw';
+  %imu_topic = '/jay/realsense/imu/data_raw';
 elseif (strcmp(mav_name, 'ibis') == 1)
   imu_topic = '/ibis/imu';
 else
-  imu_topic = '/fcu/imu';
+  imu_topic = '/imu0';
 end
 
 imu = readImu(bag, imu_topic);
 imu.t = imu.t - imu.t(1);
+
+[publish_path,~,~] = fileparts(bag_name);
 
 %% Lowpass the x axis IMU
 RC = 0.016 * 2;
@@ -66,7 +69,7 @@ for i = 1:floor(length(imu.t)/100)
 end
 
 %% Figures
-%close all;
+close all;
 figure();
 ax = axes;
 plot(imu.t, imu.a(:,:), 'linewidth', 2);
@@ -122,4 +125,3 @@ ax.FontSize = 16;
 
 %%
 %fvtool(d)
-

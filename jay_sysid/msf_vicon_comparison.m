@@ -1,5 +1,5 @@
 %% Parameters
-%bag_name = '~/data/jay/comparison/jay_blue/2017-05-03-13-24-26.bag';
+bag_name = '~/data/jay/comparison/jay_blue/2017-05-03-13-24-26.bag';
 %bag_name = '~/data/jay/comparison/jay_foam/2017-05-03-14-40-48.bag';
 %bag_name = '~/data/jay/comparison/jay_gel/2017-05-03-18-50-36.bag';
 %bag_name = '~/data/jay/comparison/imu_double_damping/2017-05-04-15-54-08.bag';
@@ -7,7 +7,8 @@
 %bag_name = '~/data/jay/comparison/imu_double_damping_5hz/2017-05-04-16-05-34.bag';
 %bag_name = '~/data/jay/comparison/imu_blue_5hz/2017-05-04-18-00-37.bag';
 %bag_name = '~/data/jay/comparison/imu_butter_5hz/2017-05-05-14-11-25.bag';
-bag_name = '~/data/jay/comparison/imu_butter_real_5hz/2017-05-05-16-49-00.bag';
+%bag_name = '~/data/jay/comparison/imu_butter_real_5hz/2017-05-05-16-49-00.bag';
+%bag_name = '~/data/jay/comparison/imu_butter_10hz/2017-05-05-17-07-01.bag';
 
 mav_name = 'jay';
 
@@ -26,6 +27,8 @@ t_start = imu.t(1);
 imu.t = imu.t - t_start;
 odometry.t = odometry.t - t_start;
 vicon_odometry.t = vicon_odometry.t - t_start;
+
+[publish_path,~,~] = fileparts(bag_name);
 
 %% Get a velocity estimate by finite difference out of vicon
 smoothing_parameter=0.9999;
