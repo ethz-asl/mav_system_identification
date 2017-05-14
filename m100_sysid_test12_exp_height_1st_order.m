@@ -5,8 +5,8 @@ path(path, '/Users/Inkyu/Research/ETH_Postdoc/Flourish/FlourishDev/DJI/DJI_sysID
 
 
 % two experiments are needed to validate the identification
-bagfile_exp1 =  './bags/falcon2_exp01_again.bag';
-bagfile_exp2 =  './bags/falcon2_exp02_again.bag';
+bagfile_exp1 =  './bags/falcon2_exp01_again_again.bag';
+bagfile_exp2 =  './bags/falcon2_exp02_again_again.bag';
 
 
 
