@@ -13,6 +13,7 @@ bagfile_exp2 =  './bags/falcon2_exp02_again_again.bag';
 topic_imu = '/falcon2/dji_sdk/imu';
 topic_rcdata = '/falcon2/dji_sdk/vc_cmd';
 topic_vicon = '/falcon2/vrpn_client/estimated_odometry';
+topic_vel = '/falcon2/dji_sdk/velocity';
 
 bag1 = ros.Bag(bagfile_exp1);
 bag2 = ros.Bag(bagfile_exp2);
@@ -29,11 +30,13 @@ bag2.info
 Experiment1.IMU = readImu(bag1, topic_imu);
 Experiment1.RCData = readCommnadRollPitchYawRateThrust(bag1, topic_rcdata);
 Experiment1.Vicon = readOdometry(bag1, topic_vicon);
+Experiment1.Vel = readDJI_Velocity(bag1,topic_vel);
 
 
 Experiment2.IMU = readImu(bag2, topic_imu);
 Experiment2.RCData = readCommnadRollPitchYawRateThrust(bag2, topic_rcdata);
 Experiment2.Vicon = readOdometry(bag2, topic_vicon);
+Experiment2.Vel = readDJI_Velocity(bag2,topic_vel);
 
 % Write the quaternions from VICON properly
 
@@ -62,20 +65,28 @@ Experiment2.rpy_imu = quat2rpy(Experiment2.IMU.q);
 Experiment1.Vicon.t = Experiment1.Vicon.t - Experiment1.Vicon.t(1);
 Experiment1.RCData.t = Experiment1.RCData.t - Experiment1.RCData.t(1);
 Experiment1.IMU.t = Experiment1.IMU.t - Experiment1.IMU.t(1);
+Experiment1.Vel.t = Experiment1.Vel.t - Experiment1.Vel.t(1);
+
 
 Experiment2.Vicon.t = Experiment2.Vicon.t - Experiment2.Vicon.t(1);
 Experiment2.RCData.t = Experiment2.RCData.t - Experiment2.RCData.t(1);
 Experiment2.IMU.t = Experiment2.IMU.t - Experiment2.IMU.t(1);
-
-
+Experiment2.Vel.t = Experiment2.Vel.t - Experiment2.Vel.t(1);
+close all;
 figure(1);
 title('Experiment 2 Data');
-plot(Experiment2.Vicon.t, Experiment2.Vicon.v(3,:), ...
+%plot(Experiment2.Vicon.t, Experiment2.Vicon.v(3,:), ...
+%    Experiment2.Vel.t, (Experiment2.RCData.thrust(3,:)-1024)*0.002649, ...
+%    'g--', 'linewidth', 2);
+
+plot(Experiment2.Vel.t, Experiment2.Vel.vz, ..., ...
     Experiment2.RCData.t, (Experiment2.RCData.thrust(3,:)-1024)*0.002649, ...
     'g--', 'linewidth', 2);
+hold on;
+plot(Experiment2.Vicon.t, Experiment2.Vicon.v(3,:),'r');
 
 xlabel('time');
-legend('y','y_{ref}');
+legend('vz','vz_{ref}','vz_{vicon}');
 ylabel('m/s');
 title('dz from vicon');
 
