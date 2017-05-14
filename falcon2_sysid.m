@@ -100,7 +100,7 @@ Experiment1.IMU.t=Experiment1.Vicon.t;
 Experiment1.RCData.roll=cmd_roll_intp;
 Experiment1.RCData.pitch=cmd_pitch_intp;
 Experiment1.RCData.yaw_rate=cmd_yawrate_intp;
-%Experiment1.RCData.thrust(3,:)=cmd_thrust_intp;
+Experiment1.RCData.verti_vel=cmd_thrust_intp;
 
 Experiment1.RCData.t=zeros(1,size(cmd_roll_intp,2));
 Experiment1.RCData.t=Experiment1.Vicon.t;
@@ -124,6 +124,7 @@ Experiment2.IMU.t=Experiment2.Vicon.t;
 Experiment2.RCData.roll=cmd_roll_intp;
 Experiment2.RCData.pitch=cmd_pitch_intp;
 Experiment2.RCData.yaw_rate=cmd_yawrate_intp;
+Experiment2.RCData.verti_vel=cmd_thrust_intp;
 
 Experiment2.RCData.t=zeros(1,size(cmd_roll_intp,2));
 Experiment2.RCData.t=Experiment2.Vicon.t;
@@ -161,20 +162,23 @@ Experiment2.rpy_imu = quat2rpy(Experiment2.IMU.q);
 %Please have a look "DJI_M100_regression for more detail.
 k_pitch = 0.000844; 
 k_roll  = 0.000865;
-k_thrust = 100/4095; % not used in this sysId.
+k_thrust = 0.002649;
+%DJI vc channel, 1=pitch, 2=roll, 3=vertical velocity, 4=yaw_rate.
+
 
 Experiment1.roll_cmd    = (Experiment1.RCData.roll-1024)...
     *k_roll;
 Experiment1.pitch_cmd   = (Experiment1.RCData.pitch-1024)...
     *k_pitch;
-Experiment1.thrust_cmd  = Experiment1.RCData.thrust...
-    *k_thrust;
+Experiment1.thrust_cmd  = (Experiment1.RCData.verti_vel-1024)...
+    *k_thrust;%stick velocity command.
 
 Experiment2.roll_cmd    = (Experiment2.RCData.roll-1024)...
     *k_pitch;
 Experiment2.pitch_cmd   = (Experiment2.RCData.pitch-1024)...
     *k_roll;
-Experiment2.thrust_cmd  = Experiment2.RCData.thrust*k_thrust;
+Experiment2.thrust_cmd  = (Experiment2.RCData.verti_vel-1024)...
+    *k_thrust;
 
 
 %%
@@ -270,6 +274,20 @@ plot(Experiment2.Vicon.t, Experiment2.rpy(2,:)*180/pi, ...
 xlabel('time');
 ylabel('pitch [deg]');
 title('pitch from vicon');
+
+%%
+% *Plot dz from experiment 1*
+figure;
+title('Experiment 1 Data');
+subplot(1,1,1);
+plot(Experiment1.Vicon.t, Experiment1.Vicon.v(3,:), ...
+    Experiment1.RCData.t, Experiment1.thrust_cmd, ...
+    'g--', 'linewidth', 2);
+
+xlabel('time');
+legend('y','y_{ref}');
+ylabel('m/s');
+title('dz from vicon');
 
 
 %% Identification of roll system
