@@ -13,12 +13,12 @@
 %
 
 clear all
-path(path, './read_bags');
-path(path, './helper_functions');
+path(path, '../read_bags');
+path(path, '../helper_functions');
 
 % two experiments are needed to validate the identification
-bagfile_exp1 =  './bags/falcon2_exp01.bag';
-bagfile_exp2 =  './bags/falcon2_exp02.bag';
+bagfile_exp1 =  '../bags/falcon2_exp01.bag';
+bagfile_exp2 =  '../bags/falcon2_exp02.bag';
 
 
 topic_imu = '/falcon2/dji_sdk/imu';
@@ -274,21 +274,6 @@ plot(Experiment2.Vicon.t, Experiment2.rpy(2,:)*180/pi, ...
 xlabel('time');
 ylabel('pitch [deg]');
 title('pitch from vicon');
-
-%%
-% *Plot dz from experiment 1*
-figure;
-title('Experiment 1 Data');
-subplot(1,1,1);
-plot(Experiment1.Vicon.t, Experiment1.Vicon.v(3,:), ...
-    Experiment1.RCData.t, Experiment1.thrust_cmd, ...
-    'g--', 'linewidth', 2);
-
-xlabel('time');
-legend('y','y_{ref}');
-ylabel('m/s');
-title('dz from vicon');
-
 
 %% Identification of roll system
 
