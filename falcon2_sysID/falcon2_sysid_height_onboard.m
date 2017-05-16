@@ -67,7 +67,6 @@ Experiment2.RCData=rmfield(Experiment2.RCData,'thrust');
 %Please have a look "DJI_M100_regression for more detail.
 k_pitch = 0.000844; 
 k_roll  = 0.000865;
-%k_thrust = 0.0023;
 k_thrust = 0.0029;
 
 %DJI vc channel, 1=pitch, 2=roll, 3=thrust, 4=yaw_rate.
