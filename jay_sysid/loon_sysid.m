@@ -3,16 +3,20 @@ clear all;
 close all
 clc;
 
-%bag_name =  '2017-04-10-10-09-32.bag';
-%bag_name = '~/data/jay/sysid/2017-05-12-13-09-21.bag';
-%bag_name = '~/data/jay/sysid/2017-05-12-13-11-21.bag';
-bag_name = '~/data/jay/sysid/2017-09-08-16-10-10.bag';
+%bag_name = '~/data/loon_sysid/2018-03-21-22-04-48.bag';
+bag_name = '~/data/loon_sysid/2018-07-12-13-41-06.bag';
+
+
+%use data from t0 to t1
+t0 = 10;
+t1 = 130;
+
 
 bag = ros.Bag(bag_name);
 bag.info
 %% read topics
-imu_data = readImu(bag, '/jay/mavros/imu/data');
-imu_raw = readImu(bag, '/jay/mavros/imu/data_raw');
+imu_data = readImu(bag, '/loon/mavros/imu/data');
+imu_raw = readImu(bag, '/loon/mavros/imu/data_raw');
 
 % For old bags
 % attitude_cmd = readPoseStamped(bag, '/jay/mavros/setpoint_attitude/attitude');
@@ -21,11 +25,11 @@ imu_raw = readImu(bag, '/jay/mavros/imu/data_raw');
 % attitude_cmd = readAttitudeTarget(bag, '/jay/mavros/setpoint_raw/attitude');
 % attitude_cmd.rpy = quat2rpy([attitude_cmd.q(4,:)', attitude_cmd.q(1:3,:)']');
 % For newest bags
-attitude_cmd = readCommandRollPitchYawRateThrust(bag, '/jay/mavros/setpoint_raw/roll_pitch_yawrate_thrust');
+attitude_cmd = readCommandRollPitchYawRateThrust(bag, '/loon/mavros/setpoint_raw/roll_pitch_yawrate_thrust');
 %%
-odometry = readOdometry(bag, '/jay/msf_core/odometry');
+odometry = readOdometry(bag, '/loon/msf_core/odometry');
 
-current_reference = readCommandReference(bag, '/jay/command/current_reference');
+current_reference = readCommandReference(bag, '/loon/command/current_reference');
 
 imu_data.rpy = quat2rpy([imu_data.q(4,:)', imu_data.q(1:3,:)']');
 attitude_cmd.rpy = vertcat(attitude_cmd.roll, attitude_cmd.pitch, attitude_cmd.yaw_rate);
@@ -79,10 +83,6 @@ attitude_cmd.rpy_interp(2,:) = interp1(attitude_cmd.t, attitude_cmd.rpy(2,:), im
 attitude_cmd.rpy_interp(3,:) = interp1(attitude_cmd.t, attitude_cmd.rpy(3,:), imu_data.t);
 
 attitude_cmd.t = imu_data.t;
-
-%use data from t0 to t1
-t0 = 8;
-t1 = 60;
 
 imu_data.t = imu_data.t(imu_data.t > t0 & imu_data.t < t1);
 imu_data.rpy = imu_data.rpy(:, imu_data.t > t0 & imu_data.t < t1);
